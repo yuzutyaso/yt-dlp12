@@ -6,8 +6,15 @@ document.getElementById('command-input').addEventListener('keypress', function (
 
         if (!command) return;
 
-        // yt-dlp または ytsr で始まるコマンドを許可する
-        if (!command.startsWith('yt-dlp') && !command.startsWith('ytsr')) {
+        // 許可するコマンドのリスト
+        // pip install 自体を許可しつつ、インストールするパッケージを限定することで安全性を高めています
+        const allowedCommands = ['pip install yt-dlp', 'pip install ytsr', 'yt-dlp', 'ytsr'];
+
+        // コマンドの先頭が許可リストに含まれているかチェック
+        // たとえば "pip install yt-dlp" は許可されますが、"pip install malicious-package" はブロックされます
+        const isAllowed = allowedCommands.some(allowedCmd => command.startsWith(allowedCmd));
+
+        if (!isAllowed) {
             addOutputLine(`許可されていないコマンドです: ${command}`, true);
             return;
         }
