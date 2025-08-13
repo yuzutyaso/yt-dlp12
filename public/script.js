@@ -6,15 +6,14 @@ document.getElementById('command-input').addEventListener('keypress', function (
 
         if (!command) return;
 
-        // セキュリティのため、yt-dlpコマンドのみを許可
-        if (!command.startsWith('yt-dlp')) {
+        // yt-dlp または ytsr で始まるコマンドを許可する
+        if (!command.startsWith('yt-dlp') && !command.startsWith('ytsr')) {
             addOutputLine(`許可されていないコマンドです: ${command}`, true);
             return;
         }
 
         addOutputLine(`$ ${command}`);
 
-        // コマンドをサーバーに送信
         fetch('/command', {
             method: 'POST',
             headers: {
@@ -23,7 +22,6 @@ document.getElementById('command-input').addEventListener('keypress', function (
             body: JSON.stringify({ command: command })
         })
         .then(response => {
-            // レスポンスをストリームとして読み込む
             const reader = response.body.getReader();
             let output = '';
             
@@ -36,7 +34,7 @@ document.getElementById('command-input').addEventListener('keypress', function (
                     const text = new TextDecoder().decode(value);
                     output += text;
                     addOutputLine(text);
-                    read(); // 繰り返し読み込む
+                    read();
                 });
             }
             read();
