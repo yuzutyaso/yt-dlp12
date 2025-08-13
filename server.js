@@ -1,7 +1,6 @@
 const express = require('express');
 const { exec } = require('child_process');
 const app = express();
-// Renderが割り当てるポートを使用
 const port = process.env.PORT || 3000;
 
 app.use(express.static('public'));
@@ -10,7 +9,8 @@ app.use(express.json());
 app.post('/command', (req, res) => {
   const { command } = req.body;
   
-  if (command.startsWith('yt-dlp')) {
+  // yt-dlp または ytsr で始まるコマンドを許可する
+  if (command.startsWith('yt-dlp') || command.startsWith('ytsr')) {
     const child = exec(command);
     
     child.stdout.on('data', (data) => {
