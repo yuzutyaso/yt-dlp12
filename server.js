@@ -9,8 +9,10 @@ app.use(express.json());
 app.post('/command', (req, res) => {
   const { command } = req.body;
   
-  // yt-dlp または ytsr で始まるコマンドを許可する
-  if (command.startsWith('yt-dlp') || command.startsWith('ytsr')) {
+  // 許可するコマンドのリスト
+  const allowedCommands = ['pip install yt-dlp', 'pip install ytsr', 'yt-dlp', 'ytsr'];
+  
+  if (allowedCommands.includes(command.split(' ')[0])) {
     const child = exec(command);
     
     child.stdout.on('data', (data) => {
@@ -26,6 +28,7 @@ app.post('/command', (req, res) => {
     });
 
   } else {
+    // 許可されていないコマンドはブロック
     res.status(403).json({ error: '許可されていないコマンドです。' });
   }
 });
