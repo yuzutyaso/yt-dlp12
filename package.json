@@ -1,0 +1,15 @@
+{
+  "name": "ytdlp-web-terminal",
+  "version": "1.0.0",
+  "description": "A web terminal to download YouTube videos using yt-dlp.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
